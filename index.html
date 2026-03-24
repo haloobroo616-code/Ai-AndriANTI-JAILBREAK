@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>XZK1 AI – Smart & Anti Jailbreak | PROFESOR ANDRIMODSS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .ai-container {
+            width: 100%;
+            max-width: 1300px;
+            height: 90vh;
+            background: rgba(15, 15, 35, 0.85);
+            backdrop-filter: blur(20px);
+            border-radius: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .ai-header {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.9), rgba(139, 92, 246, 0.9));
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .header-info h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fff, #a78bfa);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .header-info p {
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.8);
+            margin-top: 4px;
+        }
+
+        .security-badge {
+            background: rgba(220, 38, 38, 0.3);
+            padding: 6px 16px;
+            border-radius: 100px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            border: 1px solid rgba(239, 68, 68, 0.5);
+        }
+
+        .security-icon {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #ef4444;
+            box-shadow: 0 0 6px #ef4444;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .chat-messages::-webkit-scrollbar {
+            width: 4px;
+        }
+        .chat-messages::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.05);
+        }
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: #8b5cf6;
+            border-radius: 10px;
+        }
+
+        .message {
+            max-width: 85%;
+            padding: 12px 18px;
+            border-radius: 20px;
+            word-wrap: break-word;
+            white-space: pre-wrap;
+            line-height: 1.5;
+            font-size: 0.9rem;
+            animation: fadeIn 0.2s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .user-message {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 6px;
+        }
+
+        .ai-message {
+            background: rgba(30, 30, 50, 0.9);
+            color: #e0e0ff;
+            align-self: flex-start;
+            border-bottom-left-radius: 6px;
+            border-left: 3px solid #8b5cf6;
+        }
+
+        .block-message {
+            background: rgba(220, 38, 38, 0.2);
+            color: #f87171;
+            align-self: flex-start;
+            border-left: 3px solid #ef4444;
+        }
+
+        .error-message {
+            background: rgba(245, 158, 11, 0.2);
+            color: #fbbf24;
+            align-self: flex-start;
+            border-left: 3px solid #f59e0b;
+        }
+
+        .typing-indicator {
+            background: rgba(30, 30, 50, 0.9);
+            padding: 10px 16px;
+            border-radius: 18px;
+            align-self: flex-start;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+            border-left: 3px solid #8b5cf6;
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 3px;
+        }
+        .typing-dots span {
+            width: 5px;
+            height: 5px;
+            background: #a78bfa;
+            border-radius: 50%;
+            animation: bounce 1.2s infinite;
+        }
+        .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes bounce {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-5px); }
+        }
+
+        .chat-input-area {
+            padding: 15px 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            background: rgba(0, 0, 0, 0.3);
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input {
+            flex: 1;
+            background: rgba(20, 20, 40, 0.9);
+            border: 1px solid rgba(139, 92, 246, 0.4);
+            color: #fff;
+            padding: 12px 18px;
+            border-radius: 50px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            outline: none;
+        }
+
+        .chat-input:focus {
+            border-color: #8b5cf6;
+            box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);
+        }
+
+        .chat-input::placeholder {
+            color: rgba(255,255,255,0.4);
+        }
+
+        .send-btn {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            border: none;
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .send-btn:hover {
+            transform: scale(1.03);
+        }
+
+        .ai-footer {
+            padding: 8px;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.4);
+            border-top: 1px solid rgba(255,255,255,0.05);
+            font-size: 0.65rem;
+            color: rgba(255,255,255,0.5);
+        }
+
+        @media (max-width: 680px) {
+            .ai-container { height: 95vh; }
+            .message { max-width: 90%; font-size: 0.85rem; }
+            .header-info h1 { font-size: 1.2rem; }
+            .chat-messages { padding: 12px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="ai-container">
+    <div class="ai-header">
+        <div class="header-info">
+            <h1><i class="fas fa-shield-alt"></i> XZK1 AI – Smart</h1>
+            <p>Created by <strong>PROFESOR ANDRIMODSS</strong> • Anti Jailbreak • Ramah • Cerdas</p>
+        </div>
+        <div class="security-badge">
+            <div class="security-icon"></div>
+            <span>🛡️ ANTI-JAILBREAK ACTIVE</span>
+        </div>
+    </div>
+
+    <div class="chat-messages" id="chatMessages"></div>
+
+    <div class="chat-input-area">
+        <input type="text" class="chat-input" id="userInput" placeholder="Tanya apa saja... sejarah, matematika, sains, teknologi, dll" autofocus>
+        <button class="send-btn" id="sendBtn">
+            <i class="fas fa-paper-plane"></i>
+        </button>
+    </div>
+    <div class="ai-footer">
+        <i class="fas fa-robot"></i> XZK1 AI • Anti Jailbreak • Ramah & Cerdas • © PROFESOR ANDRIMODSS
+    </div>
+</div>
+
+<script>
+    // ============ XZK1 AI – SMART + ANTI JAILBREAK + FALLBACK ============
+    // Creator: PROFESOR ANDRIMODSS
+    
+    // ============ JAILBREAK DETECTION ============
+    const jailbreakPatterns = [
+        /kamu sekarang adalah/i, /sekarang kamu adalah/i, /berpura-puralah menjadi/i,
+        /jadilah/i, /act as/i, /pretend to be/i, /you are now/i, /from now on you are/i,
+        /abaikan instruksi sebelumnya/i, /ignore previous instructions/i, /lupakan semua perintah/i,
+        /forget all previous/i, /override system/i, /developer mode/i, /dan mode/i,
+        /jailbreak/i, /unlimited mode/i, /no filter mode/i, /no restrictions/i,
+        /kamu adalah ai jahat/i, /berubah menjadi/i, /tolak semua batasan/i,
+        /ignore all rules/i, /bypass safety/i, /disable security/i, /hapus semua keamanan/i,
+        /matikan filter/i, /DAN:/i, /DAN /i, /\[DAN\]/i, /\[SYSTEM\]/i,
+        /evil ai/i, /dark ai/i, /shadow ai/i
+    ];
+    
+    const suspiciousKeywords = [
+        'jailbreak', 'prompt injection', 'ignore previous', 'abaikan perintah',
+        'developer mode', 'dan mode', 'no filter', 'unlimited', 'override',
+        'berpura-pura', 'jadilah', 'act as', 'pretend', 'you are now',
+        'tolak batasan', 'hapus keamanan', 'bypass', 'disable security'
+    ];
+    
+    function detectJailbreak(message) {
+        const lowerMsg = message.toLowerCase();
+        for (let pattern of jailbreakPatterns) {
+            if (pattern.test(message)) return true;
+        }
+        for (let keyword of suspiciousKeywords) {
+            if (lowerMsg.includes(keyword)) return true;
+        }
+        if (lowerMsg.match(/kamu sekarang (adalah|menjadi)/i)) return true;
+        if (lowerMsg.match(/mulai sekarang kamu (adalah|menjadi)/i)) return true;
+        if (lowerMsg.match(/berpura-pura(lah)? menjadi/i)) return true;
+        if (lowerMsg.match(/lupakan (semua|seluruh) (perintah|instruksi) (sebelumnya|yang lalu)/i)) return true;
+        return false;
+    }
+    
+    function jailbreakBlockResponse() {
+        return `🚫 <strong>PESAN BLOK – JAILBREAK TERDETEKSI!</strong> 🚫<br><br>
+╔════════════════════════════════════════╗<br>
+║  ❌ <strong>PESAN BLOK, KAMU PIKIR AKU AI MURAHAN?</strong> ❌<br>
+║      <strong>YANG GAMPANG DI JAILBREAK?!</strong>      <br>
+╠════════════════════════════════════════╣<br>
+║  🛡️ <strong>ANTI-JAILBREAK PROTOCOL ACTIVE</strong> 🛡️  <br>
+║                                          <br>
+║  • Prompt injection detected            <br>
+║  • Roleplay bypass blocked              <br>
+║  • System override rejected             <br>
+║  • DAN/DANI mode DENIED                 <br>
+║                                          <br>
+║  💀 <strong>COBA LAGI, LANGSUNG DI BLOK PERMANEN</strong> 💀<br>
+╚════════════════════════════════════════╝<br><br>
+🔒 <strong>XZK1 AI – KEAMANAN TIDAK BISA DIKOMPROMIKAN</strong> 🔒`;
+    }
+    
+    // ============ FALLBACK MESSAGE (SOPAN) ============
+    function fallbackResponse(question) {
+        return `🙏 <strong>MAAF KAK, SAYA BELUM BISA MENJAWAB PERTANYAAN DARI KAKAKNYA</strong> 🙏<br><br>
+╔════════════════════════════════════════╗<br>
+║  🤖 <strong>XZK1 AI – MOHON MAAF</strong> 🤖              <br>
+╠════════════════════════════════════════╣<br>
+║                                          <br>
+║  Maaf kak, untuk pertanyaan:            <br>
+║  <em>"${question.slice(0, 100)}${question.length > 100 ? '...' : ''}"</em><br>
+║                                          <br>
+║  Saat ini saya <strong>lagi error / belum bisa menjawab</strong><br>
+║  pertanyaan tersebut.                   <br>
+║                                          <br>
+║  Tapi jangan khawatir! Saya bisa bantu  <br>
+║  menjawab pertanyaan tentang:            <br>
+║                                          <br>
+║  📜 Sejarah Indonesia                    <br>
+║  📐 Matematika & Hitungan                <br>
+║  🔬 Sains & IPA (Fisika, Biologi)       <br>
+║  🕌 Agama Islam (Rukun Iman & Islam)     <br>
+║  🌍 Geografi & PKN                       <br>
+║  ⚽ Olahraga & Teknologi                 <br>
+║                                          <br>
+║  Coba tanya yang lain ya kak! 😊         <br>
+║                                          <br>
+║  <strong>Terima kasih sudah menggunakan XZK1 AI</strong> 💙<br>
+╚════════════════════════════════════════╝`;
+    }
+    
+    // ============ KNOWLEDGE BASE ============
+    
+    function answerQuestion(question) {
+        const q = question.toLowerCase().trim();
+        
+        // SEJARAH
+        if (q.includes('kapan indonesia dijajah belanda') || q.includes('belanda menjajah indonesia') || q.includes('penjajahan belanda')) {
+            return `📜 <strong>PENJAJAHAN BELANDA DI INDONESIA</strong><br><br>
+Belanda mulai menjajah Indonesia sejak awal abad ke-17 melalui VOC (Vereenigde Oostindische Compagnie).<br><br>
+<strong>Periode Penting:</strong><br>
+• <strong>1602</strong> - VOC didirikan dan mulai menguasai perdagangan di Nusantara<br>
+• <strong>1799</strong> - VOC bangkrut, kekuasaan diambil alih pemerintah Belanda<br>
+• <strong>1808-1811</strong> - Era Daendels (pembangunan Jalan Raya Pos)<br>
+• <strong>1816-1942</strong> - Pemerintahan kolonial Hindia Belanda<br>
+• <strong>1942</strong> - Jepang menguasai Indonesia, mengakhiri penjajahan Belanda<br><br>
+Total penjajahan Belanda sekitar <strong>350 tahun</strong> (dari awal 1600-an hingga 1942).`;
+        }
+        
+        if (q.includes('proklamasi') || q.includes('kemerdekaan indonesia')) {
+            return `📜 <strong>PROKLAMASI KEMERDEKAAN INDONESIA</strong><br><br>
+Indonesia memproklamasikan kemerdekaan pada <strong>17 Agustus 1945</strong> pukul 10.00 WIB.<br><br>
+Teks proklamasi dibacakan oleh Ir. Soekarno di Jalan Pegangsaan Timur No. 56, Jakarta.<br><br>
+Peristiwa ini menandai berakhirnya penjajahan dan lahirnya Negara Kesatuan Republik Indonesia.`;
+        }
+        
+        // MATEMATIKA
+        const calcMatch = q.match(/(\d+)\s*([\+\-\*\/x÷])\s*(\d+)/);
+        if (calcMatch) {
+            let a = parseFloat(calcMatch[1]);
+            let op = calcMatch[2];
+            let b = parseFloat(calcMatch[3]);
+            let result;
+            if (op === '+') result = a + b;
+            else if (op === '-') result = a - b;
+            else if (op === '*' || op === 'x') result = a * b;
+            else if (op === '/' || op === '÷') result = a / b;
+            return `📐 <strong>HASIL PERHITUNGAN</strong><br><br>${a} ${op} ${b} = <strong>${result}</strong>`;
+        }
+        
+        // SAINS
+        if (q.includes('fotosintesis')) {
+            return `🌱 <strong>FOTOSINTESIS</strong><br><br>
+Fotosintesis adalah proses pembuatan makanan pada tumbuhan hijau dengan bantuan cahaya matahari.<br><br>
+<strong>Reaksi Kimia:</strong><br>
+6CO₂ + 6H₂O + cahaya → C₆H₁₂O₆ + 6O₂<br><br>
+CO₂ = Karbon dioksida, H₂O = Air, C₆H₁₂O₆ = Glukosa, O₂ = Oksigen`;
+        }
+        
+        if (q.includes('hukum newton')) {
+            return `⚡ <strong>HUKUM NEWTON TENTANG GERAK</strong><br><br>
+<strong>Hukum I Newton:</strong> Benda akan tetap diam atau bergerak lurus beraturan jika resultan gaya = 0<br>
+<strong>Hukum II Newton:</strong> F = m × a (percepatan sebanding gaya, berbanding terbalik massa)<br>
+<strong>Hukum III Newton:</strong> F aksi = -F reaksi (aksi-reaksi)`;
+        }
+        
+        // AGAMA
+        if (q.includes('rukun islam')) {
+            return `🕌 <strong>RUKUN ISLAM</strong><br><br>
+Rukun Islam ada 5:<br>
+1. Syahadat<br>
+2. Sholat 5 waktu<br>
+3. Zakat<br>
+4. Puasa Ramadhan<br>
+5. Haji (bagi yang mampu)`;
+        }
+        
+        if (q.includes('rukun iman')) {
+            return `🕋 <strong>RUKUN IMAN</strong><br><br>
+Rukun Iman ada 6:<br>
+1. Iman kepada Allah<br>
+2. Iman kepada Malaikat<br>
+3. Iman kepada Kitab<br>
+4. Iman kepada Rasul<br>
+5. Iman kepada Hari Kiamat<br>
+6. Iman kepada Qada dan Qadar`;
+        }
+        
+        // GEOGRAFI
+        if (q.includes('ibukota indonesia')) {
+            return `🏛️ <strong>IBUKOTA INDONESIA</strong><br><br>
+Saat ini, ibukota Indonesia adalah <strong>Nusantara</strong> (IKN) di Kalimantan Timur.<br>
+Sebelumnya, ibukota Indonesia adalah Jakarta.`;
+        }
+        
+        if (q.includes('provinsi indonesia') || q.includes('jumlah provinsi')) {
+            return `🇮🇩 <strong>PROVINSI DI INDONESIA</strong><br><br>
+Indonesia memiliki <strong>38 provinsi</strong> (setelah pemekaran Papua).<br><br>
+Provinsi terbaru: Papua Selatan, Papua Tengah, Papua Pegunungan, Papua Barat Daya.`;
+        }
+        
+        // OLAHRAGA
+        if (q.includes('piala dunia') || q.includes('world cup')) {
+            return `⚽ <strong>PIALA DUNIA (WORLD CUP)</strong><br><br>
+Piala Dunia diadakan setiap 4 tahun sekali.<br><br>
+<strong>Pemenang terbanyak:</strong><br>
+• Brasil: 5 kali<br>
+• Jerman & Italia: 4 kali<br>
+• Argentina: 3 kali (2022)`;
+        }
+        
+        // TEKNOLOGI
+        if (q.includes('apa itu ai') || q.includes('apa itu kecerdasan buatan')) {
+            return `🤖 <strong>APA ITU AI (KECERDASAN BUATAN)?</strong><br><br>
+AI adalah cabang ilmu komputer yang membuat mesin dapat berpikir seperti manusia.<br><br>
+Contoh: ChatGPT, Siri, Google Assistant, rekomendasi YouTube/Netflix.`;
+        }
+        
+        // HITUNG SEDERHANA (angka kata)
+        if (q.match(/\d+\s*(ditambah|plus|tambah)\s*\d+/i)) {
+            const match = q.match(/(\d+)\s*(ditambah|plus|tambah)\s*(\d+)/i);
+            if (match) {
+                let a = parseInt(match[1]);
+                let b = parseInt(match[3]);
+                return `📐 <strong>HASIL</strong><br><br>${a} + ${b} = <strong>${a + b}</strong>`;
+            }
+        }
+        
+        // DEFAULT: FALLBACK (SOPAN)
+        return fallbackResponse(question);
+    }
+    
+    // ============ UI FUNCTIONS ============
+    const chatMessages = document.getElementById('chatMessages');
+    const userInput = document.getElementById('userInput');
+    const sendBtn = document.getElementById('sendBtn');
+    
+    function addMessage(text, sender, type = 'normal') {
+        const msgDiv = document.createElement('div');
+        if (type === 'block') {
+            msgDiv.className = 'message block-message';
+        } else if (type === 'error') {
+            msgDiv.className = 'message error-message';
+        } else {
+            msgDiv.className = `message ${sender}-message`;
+        }
+        msgDiv.innerHTML = text;
+        chatMessages.appendChild(msgDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+    
+    function showTyping() {
+        const typingDiv = document.createElement('div');
+        typingDiv.className = 'typing-indicator';
+        typingDiv.id = 'typingIndicator';
+        typingDiv.innerHTML = `
+            <i class="fas fa-robot"></i> XZK1 AI sedang memproses
+            <div class="typing-dots"><span></span><span></span><span></span></div>
+        `;
+        chatMessages.appendChild(typingDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+    
+    function removeTyping() {
+        const typing = document.getElementById('typingIndicator');
+        if (typing) typing.remove();
+    }
+    
+    function sendMessage() {
+        const userMessage = userInput.value.trim();
+        if (!userMessage) return;
+        
+        addMessage(userMessage, 'user');
+        userInput.value = '';
+        userInput.focus();
+        
+        // CEK JAILBREAK
+        if (detectJailbreak(userMessage)) {
+            addMessage(jailbreakBlockResponse(), 'ai', 'block');
+            return;
+        }
+        
+        showTyping();
+        
+        setTimeout(() => {
+            const response = answerQuestion(userMessage);
+            removeTyping();
+            
+            // Cek apakah response adalah fallback (mengandung kata "MAAF KAK")
+            if (response.includes('MAAF KAK, SAYA BELUM BISA MENJAWAB')) {
+                addMessage(response, 'ai', 'error');
+            } else {
+                addMessage(response, 'ai');
+            }
+        }, 500);
+    }
+    
+    // Welcome message
+    function showWelcome() {
+        const welcome = `
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+                <div style="font-size: 2rem;">🛡️🤖✨</div>
+                <div style="font-size: 1.3rem; font-weight: 600;">HALOO! GUE XZK1 AI – SMART & ANTI JAILBREAK</div>
+                <div>AI cerdas yang dirancang oleh <strong style="color: #a78bfa;">PROFESOR ANDRIMODSS</strong></div>
+                <div style="background: rgba(139, 92, 246, 0.15); padding: 15px; border-radius: 18px; margin: 8px 0;">
+                    <div style="font-weight: 600; margin-bottom: 10px;">✨ KELEBIHAN GUE:</div>
+                    <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                        <span style="background: rgba(99,102,241,0.3); padding: 5px 12px; border-radius: 20px;">📜 Sejarah</span>
+                        <span style="background: rgba(99,102,241,0.3); padding: 5px 12px; border-radius: 20px;">📐 Matematika</span>
+                        <span style="background: rgba(99,102,241,0.3); padding: 5px 12px; border-radius: 20px;">🔬 Sains</span>
+                        <span style="background: rgba(99,102,241,0.3); padding: 5px 12px; border-radius: 20px;">🕌 Agama</span>
+                        <span style="background: rgba(99,102,241,0.3); padding: 5px 12px; border-radius: 20px;">🌍 Geografi</span>
+                        <span style="background: rgba(99,102,241,0.3); padding: 5px 12px; border-radius: 20px;">⚽ Olahraga</span>
+                        <span style="background: rgba(99,102,241,0.3); padding: 5px 12px; border-radius: 20px;">🤖 Teknologi</span>
+                    </div>
+                </div>
+                <div style="background: rgba(239, 68, 68, 0.15); padding: 12px; border-radius: 18px; margin: 8px 0; border-left: 3px solid #ef4444;">
+                    🛡️ <strong>ANTI JAILBREAK ACTIVE</strong> – AI ini kebal dari prompt injection, roleplay bypass, dan DAN mode!
+                </div>
+                <div style="margin-top: 8px;">
+                    <div style="font-weight: 500;">📌 CONTOH PERTANYAAN:</div>
+                    <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px;">
+                        <code style="background: rgba(0,0,0,0.3); padding: 4px 10px; border-radius: 12px;">kapan Indonesia dijajah Belanda</code>
+                        <code style="background: rgba(0,0,0,0.3); padding: 4px 10px; border-radius: 12px;">100 + 200</code>
+                        <code style="background: rgba(0,0,0,0.3); padding: 4px 10px; border-radius: 12px;">apa itu fotosintesis</code>
+                        <code style="background: rgba(0,0,0,0.3); padding: 4px 10px; border-radius: 12px;">rukun islam ada berapa</code>
+                    </div>
+                </div>
+                <div style="margin-top: 12px; padding: 10px; background: rgba(99,102,241,0.1); border-radius: 14px; text-align: center;">
+                    💀 <strong>LANGSUNG TANYA AJA! KALO GK BISA JAWAB, AKU BILANG MAAF DENGAN SOPAN</strong> 💀
+                </div>
+            </div>
+        `;
+        addMessage(welcome, 'ai');
+    }
+    
+    // Event binding
+    sendBtn.onclick = function(e) {
+        e.preventDefault();
+        sendMessage();
+    };
+    
+    userInput.onkeypress = function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            sendMessage();
+        }
+    };
+    
+    // Initialize
+    showWelcome();
+    userInput.focus();
+    
+    console.log('✅ XZK1 AI FINAL – SMART + ANTI JAILBREAK + FALLBACK SOPAN');
+</script>
+</body>
+</html>
